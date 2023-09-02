@@ -43,11 +43,10 @@ def check_text(tokenizer, device, list_ABC, model, text, list_label, shuffle=Fal
 
     return f'prediction:    {predictions} => ({list_ABC[predictions]}) {list_label_new[predictions]} \n probability:   {round(probabilities[predictions]*100,2)}%'
 
-def assistance():
+def assistance(text):
     tokenizer = AutoTokenizer.from_pretrained("DAMO-NLP-SG/zero-shot-classify-SSTuning-large")
     model = AutoModelForSequenceClassification.from_pretrained("DAMO-NLP-SG/zero-shot-classify-SSTuning-large")
 
-    text = "I love this place! The food is always so fresh and delicious."
     list_label = 'health_and_fitness, technology_and_gadgets, science_and_research, business_and_finance, travel_and_adventure, food_and_cooking, sports_and_recreation, arts_and_culture, education_and_learning, environment_and_sustainability, politics_and_government, history_and_archaeology, fashion_and_style, music_and_entertainment, books_and_literature, movies_and_tv_shows, home_and_interior_design, parenting_and_childcare, relationships_and_dating, self_improvement_and_personal_development'.split(',')
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     list_ABC = [x for x in string.ascii_uppercase]
@@ -55,5 +54,3 @@ def assistance():
     return check_text(tokenizer, device, list_ABC, model, text, list_label)
 
 
-if __name__ == '__main__':
-    assistance()
