@@ -4,6 +4,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch, string, random
 import os
 from config import *
+import re
 
 
 db_conn = mysql.connector.connect(database=database['database'], user="root", password=database['password'], host="localhost", port="3306")
@@ -54,7 +55,13 @@ def assistance(text):
     list_label = 'health_and_fitness, technology_and_gadgets, science_and_research, business_and_finance, travel_and_adventure, food_and_cooking, sports_and_recreation, arts_and_culture, education_and_learning, environment_and_sustainability, politics_and_government, history_and_archaeology, fashion_and_style, music_and_entertainment, books_and_literature, movies_and_tv_shows, home_and_interior_design, parenting_and_childcare, relationships_and_dating, self_improvement_and_personal_development'.split(',')
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     list_ABC = [x for x in string.ascii_uppercase]
-
     return check_text(tokenizer, device, list_ABC, model, text, list_label)
 
+# def extract_prediction_values(prediction_string):
+#     match = re.search(r'prediction: (\d+) => \(C\) (.+)\.\n probability: (\d+\.\d+)%', prediction_string)
+#     category_index = match.group(1)
+#     category_name = match.group(2)
+#     probability = match.group(3)
 
+#     value = (category_name.strip(), probability)
+#     return value
