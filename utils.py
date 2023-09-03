@@ -2,9 +2,13 @@ from random import shuffle
 import mysql.connector
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch, string, random
+import os
+from config import *
 
 
-db_conn = mysql.connector.connect(database="unity_care", user="root", password="password", host="localhost", port="3306")
+db_conn = mysql.connector.connect(database=database['database'], user="root", password=database['password'], host="localhost", port="3306")
+code_directory = os.path.dirname(os.path.abspath(__file__))
+model_directory = os.path.join(code_directory, "model")
 
 
 def user(user_id):
@@ -44,8 +48,8 @@ def check_text(tokenizer, device, list_ABC, model, text, list_label, shuffle=Fal
     return f'prediction:    {predictions} => ({list_ABC[predictions]}) {list_label_new[predictions]} \n probability:   {round(probabilities[predictions]*100,2)}%'
 
 def assistance(text):
-    tokenizer = AutoTokenizer.from_pretrained("DAMO-NLP-SG/zero-shot-classify-SSTuning-large")
-    model = AutoModelForSequenceClassification.from_pretrained("DAMO-NLP-SG/zero-shot-classify-SSTuning-large")
+    tokenizer = AutoTokenizer.from_pretrained(model_directory)
+    model = AutoModelForSequenceClassification.from_pretrained(model_directory)
 
     list_label = 'health_and_fitness, technology_and_gadgets, science_and_research, business_and_finance, travel_and_adventure, food_and_cooking, sports_and_recreation, arts_and_culture, education_and_learning, environment_and_sustainability, politics_and_government, history_and_archaeology, fashion_and_style, music_and_entertainment, books_and_literature, movies_and_tv_shows, home_and_interior_design, parenting_and_childcare, relationships_and_dating, self_improvement_and_personal_development'.split(',')
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
